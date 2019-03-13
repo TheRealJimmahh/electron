@@ -15,7 +15,7 @@
 
 @interface TrustDelegate : NSObject {
  @private
-  std::unique_ptr<atom::util::Promise> promise_;
+  atom::util::Promise promise_;
   SFCertificateTrustPanel* panel_;
   scoped_refptr<net::X509Certificate> cert_;
   SecTrustRef trust_;
@@ -54,7 +54,7 @@
             certChain:(CFArrayRef)certChain
             secPolicy:(SecPolicyRef)secPolicy {
   if ((self = [super init])) {
-    promise_.reset(new atom::util::Promise(std::move(promise)));
+    promise_ = std::move(promise);
     panel_ = panel;
     cert_ = cert;
     trust_ = trust;
@@ -73,7 +73,7 @@
   // now.
   cert_db->NotifyObserversCertDBChanged();
 
-  promise_->Resolve();
+  promise_.Resolve();
   [self autorelease];
 }
 
